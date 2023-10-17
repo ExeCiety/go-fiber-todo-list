@@ -4,7 +4,8 @@ WORKDIR /app
 COPY . /app
 RUN go mod tidy
 RUN go install
-RUN go install github.com/gofiber/cli/fiber@latest
+RUN go install github.com/cosmtrek/air@latest
+#RUN air init
 
 EXPOSE 3001
-CMD ["fiber", "dev"]
+CMD ["air", "-c", ".air.docker.toml"]
