@@ -1,0 +1,35 @@
+version: '3'
+services:
+  todo-list-postgres:
+    container_name: todo-list-postgres
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "4200:5432"
+
+  todo-list-api:
+    container_name: todo-list-api
+    environment:
+      - PORT=3001
+      - DB_HOST=todo-list-postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_NAME=todo_list_db
+    build:
+      context: ./
+      dockerfile: local.Dockerfile
+    ports:
+      - "4211:3001"
+    depends_on:
+      - todo-list-postgres
+    volumes:
+      - ./:/app
+
+volumes:
+  db_data:
